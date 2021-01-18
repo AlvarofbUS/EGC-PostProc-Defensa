@@ -170,6 +170,35 @@ class PostProcView(APIView):
             if ~comprueba:
                 break
         return comprueba
+    
+    def comprobar_edad(self, opts, cands):
+        comprueba = False   
+        out = []
+        for opt in opts:
+            out.append({
+                **opt
+            })
+
+        menoresDe30 =[]
+        mayoresDe30=[]
+        for c in cands:
+            if c['age'] <=30:
+                menoresDe30.append(c)
+            elif c['age'] > 30:
+                mayoresDe30.append(c)
+        comprueba= self.porcentaje_edad(menoresDe30,mayoresDe30)
+        return comprueba
+    
+    def porcentaje_edad(self, menoresDe30, mayoresDe30):
+        suma = len(menoresDe30) + len(mayoresDe30)
+        porcentaje_menoresDe30 = len(menoresDe30)/suma
+        porcentaje_mayoresDe30 = len(mayoresDe30)/suma
+        if(porcentaje_menoresDe30 < porcentaje_mayoresDe30):
+            return "La mayoria de candidatos son menores de 30 años."
+        elif (porcentaje_menoresDe30 > porcentaje_mayoresDe30): 
+            return "La mayoria de candidatos son mayores de 30 años."
+        else:
+            return "Hay los mismo candidatos mayores como menores de 30."
         
     def porcentaje_genero(self, mujeres, hombres):
         suma = len(mujeres) + len(hombres)
@@ -296,13 +325,9 @@ class PostProcView(APIView):
         elif t == 'SIMPLE':
             return Response(self.simple(opts,s))
         elif t == 'SIMPLEP':
-            c = self.check_json(opts)
-            if c:
-                options = []
-                options = self.simple(opts, s)
-                return Response(self.paridad(options))
-            else:
-                return Response({'message' : 'la diferencia del numero de hombres y mujeres es de más de un 60% - 40%'})
+            mensaje = self.comprobar_edad(opts,cands)
+            res = self.simple(opts,s)
+            return Response({'mensaje':mensaje, 'res':res})
         elif t == 'MGU':
             return Response(self.mgu(opts,s))
         elif t == 'MGUCP':
