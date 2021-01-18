@@ -194,9 +194,9 @@ class PostProcView(APIView):
         porcentaje_menoresDe30 = len(menoresDe30)/suma
         porcentaje_mayoresDe30 = len(mayoresDe30)/suma
         if(porcentaje_menoresDe30 < porcentaje_mayoresDe30):
-            return "La mayoria de candidatos son menores de 30 años."
-        elif (porcentaje_menoresDe30 > porcentaje_mayoresDe30): 
             return "La mayoria de candidatos son mayores de 30 años."
+        elif (porcentaje_menoresDe30 > porcentaje_mayoresDe30): 
+            return "La mayoria de candidatos son menores de 30 años."
         else:
             return "Hay los mismo candidatos mayores como menores de 30."
         
