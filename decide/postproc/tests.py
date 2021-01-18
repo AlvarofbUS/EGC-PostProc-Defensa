@@ -15,6 +15,50 @@ class PostProcTestCase(APITestCase):
     def tearDown(self):
         self.client = None
 
+
+    def test_simple_edad(self):
+        data = {
+            'type': 'SIMPLEP',
+            'escanio': 7,
+            'options': [
+                { 'option': 'Option 1', 'number': 1, 'votes': 5}, 
+                { 'option': 'Option 2', 'number': 2, 'votes': 2 },
+                { 'option': 'Option 3', 'number': 3, 'votes': 5 },
+                { 'option': 'Option 4', 'number': 4, 'votes': 2 },
+                { 'option': 'Option 5', 'number': 5, 'votes': 5 },
+                { 'option': 'Option 6', 'number': 6, 'votes': 1 },
+            ],
+            'candidates': [
+                {'id': '1', 'sex': 'H',  'age':23},
+                {'id': '2', 'sex': 'H',  'age':42},
+                {'id': '3', 'sex': 'H',  'age':29},
+                {'id': '4', 'sex': 'H',  'age':26},
+                {'id': '5', 'sex': 'H',  'age':61},
+                {'id': '6', 'sex': 'H',  'age':32},
+                {'id': '7', 'sex': 'H',  'age':42},
+                {'id': '8', 'sex': 'M',  'age':27},
+                {'id': '9', 'sex': 'M',  'age':25},
+                {'id': '10', 'sex': 'M',  'age':56},
+            ],
+        } 
+
+        expect_result = {"mensaje": "Hay los mismo candidatos mayores como menores de 30."
+            ,"res": [
+                { 'option': 'Option 1', 'number': 1, 'votes': 5, 'postproc': 2 },
+                { 'option': 'Option 3', 'number': 3, 'votes': 5, 'postproc': 2 },
+                { 'option': 'Option 5', 'number': 5, 'votes': 5, 'postproc': 2 },
+                { 'option': 'Option 2', 'number': 2, 'votes': 2, 'postproc': 1 },
+                { 'option': 'Option 4', 'number': 4, 'votes': 2, 'postproc': 0 },
+                { 'option': 'Option 6', 'number': 6, 'votes': 1, 'postproc': 0 },
+            ]
+        }
+
+        response = self.client.post('/postproc/', data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        values = response.json()
+        self.assertEqual(values, expect_result)
+
     def test_identity(self):
         data = {
             'type': 'IDENTITY',
