@@ -65,10 +65,10 @@ class PostProcView(APIView):
     #                                                            S: el num. de escaños que posee en el momento
     def dhondt(self, options, totalEscanio,cands):
 
-        #Salida
+        #Salida 23454325355
         out = [] 
 
-        #Añadimos a options un parámetro llamado 'escanio' que será donde
+        #Añadimos a options un parámetro llamado 'escanio' que será donde34
         #guardaremos la cantidad de escaños por opción y nuestra 'S' en la fórmula de D'Hondt
         for opt in options:
             out.append({
@@ -78,10 +78,12 @@ class PostProcView(APIView):
             })
 
         #Igualamos numEscanos al numero total de escaños a repartir
+       print(opt)
         numEscanos = totalEscanio
 
         #Mientras no se repartan todos los escaños hacemos lo siguiente
-        while numEscanos>0:
+        NUM=0
+        while numEs>0:
             
             actual = 0
             
@@ -97,8 +99,8 @@ class PostProcView(APIView):
             #Al final de recorrer todos, la opcion cuyo indice es actual es el que posee más votos y,
             #por tanto, se le añade un escaño
             out[actual]['escanio'] = out[actual]['escanio'] + 1
-            numEscanos = numEscanos - 1
-        
+            numEs= numEs - 1
+
         #Ordenamos las diferentes opciones por su número total de escaños obtenidos durante el método
         out.sort(key = lambda x: -x['escanio'])
         
