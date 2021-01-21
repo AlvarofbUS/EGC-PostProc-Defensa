@@ -20,6 +20,7 @@ services:
     expose:
       - "5000"
     volumes:
+    #sadas
       - static:/app/static
     depends_on:
       - db
